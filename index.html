@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #efe7de, #e2d6c8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #3a2f28;
+  }
+
+  /* GLITCH EFFECT */
+  body.glitch {
+    animation: glitchBg 0.3s infinite;
+  }
+
+  @keyframes glitchBg {
+    0% { transform: translate(0); }
+    20% { transform: translate(-4px, 4px); }
+    40% { transform: translate(4px, -4px); }
+    60% { transform: translate(-2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  /* RED ALERT */
+  body.red-alert {
+    animation: redFlash 0.25s infinite;
+  }
+
+  @keyframes redFlash {
+    0% { background: #e2d6c8; }
+    50% { background: #c79292; }
+    100% { background: #e2d6c8; }
+  }
+
+  .card {
+    background: rgba(255, 252, 248, 0.98);
+    padding: 40px;
+    border-radius: 22px;
+    text-align: center;
+    width: 420px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+    transition: all 0.8s ease;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* HEART SHAPE */
+  .card.heart {
+    width: 320px;
+    height: 320px;
+    padding: 0;
+    border-radius: 0;
+    background: #e9bfb0;
+    transform: rotate(-45deg);
+  }
+
+  .card.heart::before,
+  .card.heart::after {
+    content: "";
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: #e9bfb0;
+    border-radius: 50%;
+  }
+
+  .card.heart::before {
+    top: -160px;
+    left: 0;
+  }
+
+  .card.heart::after {
+    left: 160px;
+    top: 0;
+  }
+
+  /* TEXT INSIDE HEART */
+  .heart-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transform: rotate(45deg); /* cancels heart rotation */
+    z-index: 3;
+    padding: 40px;
+  }
+
+  h1 {
+    color: #9f5c47;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #5a463c;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+
+  button {
+    padding: 12px 28px;
+    border-radius: 30px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .yes {
+    background: #d39a84;
+    color: white;
+  }
+
+  .yes:hover {
+    transform: scale(1.1);
+    background: #c48870;
+  }
+
+  .no {
+    background: #b8aba2;
+    color: #3a2f28;
+  }
+
+  .error {
+    margin-top: 15px;
+    color: #a55555;
+    font-size: 0.95rem;
+  }
+
+  /* ANGELS */
+  .angel {
+    position: absolute;
+    font-size: 30px;
+    animation: flyAngel 8s linear infinite;
+    opacity: 0.9;
+  }
+
+  @keyframes flyAngel {
+    0% {
+      transform: translate(-10vw, 100vh) scale(0.7);
+      opacity: 0;
+    }
+    50% { opacity: 1; }
+    100% {
+      transform: translate(110vw, -10vh) scale(1.2);
+      opacity: 0;
+    }
+  }
+
+  /* SYSTEM ERROR */
+  .system-error {
+    position: absolute;
+    inset: 0;
+    background: rgba(90, 40, 40, 0.65);
+    color: white;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    animation: flicker 0.25s infinite;
+    letter-spacing: 1px;
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.75; }
+    100% { opacity: 1; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Umva mbe muko...</h1>
+  <p>
+    Uranyemera, Ntunyemera?.<br>
+    Kandi gira vub'usubiza.
+  </p>
+
+  <button class="yes" onclick="yesClick()">Subwo nakwanga nkemera nde?</button>
+  <button class="no" onclick="noClick()">Mvanaho ubusutwa wacyontazi we.</button>
+
+  <div id="message"></div>
+</div>
+
+<script>
+  function noClick() {
+    document.body.classList.add("glitch", "red-alert");
+
+    document.getElementById("message").innerHTML =
+      `<div class="error">❌ Invalid response. Please try again.</div>`;
+
+    const overlay = document.createElement("div");
+    overlay.className = "system-error";
+    overlay.innerText = "SYSTEM MALFUNCTION";
+    document.body.appendChild(overlay);
+
+    setTimeout(() => {
+      document.body.classList.remove("glitch", "red-alert");
+      overlay.remove();
+    }, 1500);
+  }
+
+  function yesClick() {
+    document.body.classList.remove("glitch", "red-alert");
+
+    const card = document.getElementById("card");
+    card.classList.add("heart");
+
+    card.innerHTML = `
+      <div class="heart-content">
+        <div>
+          <h1>Ngaho rero be my Valentine</h1>
+          <p>(You don't have an option to decline)</p>
+        </div>
+      </div>
+    `;
+
+    setInterval(() => {
+      const angel = document.createElement("div");
+      angel.className = "angel";
+      angel.innerHTML = "😇";
+      angel.style.top = Math.random() * 80 + "vh";
+      angel.style.fontSize = Math.random() * 18 + 24 + "px";
+      document.body.appendChild(angel);
+
+      setTimeout(() => angel.remove(), 8000);
+    }, 600);
+  }
+</script>
+
+</body>
+</html>
